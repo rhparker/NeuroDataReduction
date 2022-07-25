@@ -1,0 +1,37 @@
+function [signal, t] = build_periodic(freq_fast, ...
+                                      freq_slow, ...
+                                      num_cells, ...
+                                      noise_multiplier, ...
+                                      rng_seed)
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+rng(rng_seed)
+
+t0 = 0;
+tf = 50;
+dt = 0.01;
+
+t = (t0 : dt : tf)';
+
+freq_fast = freq_fast(:)';
+coef_fast = rand( num_cells, numel( freq_fast) ) + 1;
+
+coef_slow = rand( 1 , num_cells) + 1;
+
+signal = nan( numel(t), num_cells );
+beta = 100;
+
+for cell = 1 : num_cells
+    % get linear combinatin of fast frequencies
+    signal_curr = sum( coef_fast(cell,:) .* sin( 2 * pi * t .* freq_fast ), 2 );
+    
+    % multiply by slow rhythm
+    signal_curr = signal_curr .* atan(beta* sin( 2 * pi * t * freq_slow ) .* coef_slow( cell ));
+    
+    signal(:, cell) = signal_curr;
+end
+
+signal = signal + noise_multiplier .* randn( size(signal) );
+
+end
+
