@@ -137,7 +137,7 @@ start_time = 0;
 % start_time = min( min( newSp ) );
 
 % bin_width = 0.001; % in seconds // changed to user input
-bin_edges = (start_time-bin_width) : bin_width : final_time;
+bin_edges = (start_time) : bin_width : final_time;
 
 if bin_edges(end) ~= final_time
     bin_edges = [bin_edges bin_edges(end)+bin_width];
