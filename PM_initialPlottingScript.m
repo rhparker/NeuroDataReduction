@@ -11,7 +11,7 @@ nBaC = 10;       % number of background noisy cells
 
 % timing set up 
 T = 200;            % Final time in seconds T=200 gives ~ 4 runs
-bin_width = 1;  % in seconds // 0.001 sec = 1 ms
+bin_width = 1/14;  % in seconds // 0.001 sec = 1 ms
 
 [spM, X, Times, t, position] = build_spike_data_noise(s_ph, ...
                                   nAsC, ...

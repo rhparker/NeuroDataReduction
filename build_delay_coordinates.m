@@ -30,6 +30,6 @@ end
 
 % chop off top
 delayed_data = delayed_data(step*num_delays+1:end,:);
-new_time = time(step*num_delays+1:end,:);
+new_time = time(step*num_delays+1:end);
 
 end
