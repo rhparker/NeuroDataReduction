@@ -2,9 +2,9 @@ addpath( genpath('dataBuilders') );
 
 % generate spike data
 bin_size = 0.005/14;
-assembly_size = 5;
+assembly_size = 10;
 
-[spikeTimes,Y,t,T,position] = build_spike_data_noise(0.9, assembly_size, 0, 5000, bin_size, 8);
+[spikeTimes,Y,t,T,position] = build_spike_data_noise(0.7, assembly_size, 0, 1000, bin_size, 8);
 T = T - T(1);
 
 %% delay coordinates
@@ -31,16 +31,15 @@ Yavg = Yavg / (length(t)-1);
 % [delayData, newTimes] = build_delay_coordinates(Y',T,1,2);
 
 % % first run
-% [delayData, newTimes] = build_delay_coordinates(Y1',T1,1,2);
+[delayData, newTimes] = build_delay_coordinates(Y1',T1,1,2);
 
 % average of all runs
-[delayData, newTimes] = build_delay_coordinates(Yavg',T1,1,1);
-
-smoothDelayData = smoothdata( delayData, 'gaussian', 200);
+% [delayData, newTimes] = build_delay_coordinates(Yavg',T1,1,1);
+% smoothDelayData = smoothdata( delayData, 'gaussian', 200);
 
 %% SVD
-% [U,S,V] = svd(delayData,'econ');
-[U,S,V] = svd(smoothDelayData,'econ');
+[U,S,V] = svd(delayData,'econ');
+% [U,S,V] = svd(smoothDelayData,'econ');
 
 %% plot interesting stuff
 
@@ -48,6 +47,8 @@ smoothDelayData = smoothdata( delayData, 'gaussian', 200);
 thetas = 1:(1/7):200;
 thetay = ones(size(thetas));
 thetay(1:2:end) = 0;
+
+%%
 
 figure;
 
@@ -61,14 +62,18 @@ stairs( thetas, max(abs( U(:,eig_ind) ) )*thetay, 'r' );
 xlim([t(1) t(1)+20]);
 
 % plot spike data
-subplot(2,1,2);
+
+%%
+figure;
+% subplot(2,1,2);
 hold on;
 for ind = 1:assembly_size
-    plot( newTimes, ind+(delayData(:,ind)>0 ), 'k');
+    plot( newTimes, ind+(delayData(:,ind)>0 ), 'k', 'LineWidth', 2);
 end
 % superimpose theta rhythm
-stairs( thetas, 6*thetay, 'r' );
+stairs( thetas, 12*thetay, 'r' );
 xlim([t(1) t(1)+20]);
+xlim([40 50]);
 
 % plot animal position
 % subplot(3,1,3);
@@ -81,6 +86,4 @@ xlim([t(1) t(1)+20]);
 pktimes = newTimes(locs);
 figure;
 plot(mod(pktimes, 1/7))
-
-
 
